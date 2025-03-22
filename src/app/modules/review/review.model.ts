@@ -3,7 +3,7 @@ import { IReview, ReviewModel } from "./review.interface";
 
 const reviewSchema = new Schema<IReview, ReviewModel>(
     {
-        seller: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        user: { type: Schema.Types.ObjectId, ref: "User", required: true },
         comment: { type: String, required: true },
         rating: { type: Number, required: true }
 

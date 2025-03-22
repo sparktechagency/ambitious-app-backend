@@ -12,8 +12,8 @@ const notificationSchema = new Schema<INotification, NotificationModel>(
             ref: 'User'
         },
         referenceId: {
-            type: String,
-            required: false
+            type: Schema.Types.ObjectId,
+            required: true
         },
         screen: {
             type: String,

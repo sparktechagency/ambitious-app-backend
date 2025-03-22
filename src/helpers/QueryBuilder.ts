@@ -37,6 +37,18 @@ class QueryBuilder {
         return this;
     }
 
+    sort(defaultField = 'createdAt') {
+        if (this.query.sort) {
+            const sortOrder = this.query.sort === 'asc' ? 1 : -1;
+            this.queryModel = this.queryModel.sort({ [defaultField]: sortOrder });
+        } else {
+            // Default sorting (newest to oldest)
+            this.queryModel = this.queryModel.sort({ [defaultField]: -1 });
+        }
+        return this;
+    }
+    
+
     paginate() {
         const page = Number(this.query.page) || 1;
         const limit = Number(this.query.limit) || 10;

@@ -13,7 +13,7 @@ router.post("/",
         try {
             const {rating, ...othersData } = req.body;
             const user =  req.user as JwtPayload
-            req.body = { ...othersData, seller: user.id, rating: Number(rating)};
+            req.body = { ...othersData, user: user.id, rating: Number(rating)};
             next();
             
         } catch (error) {

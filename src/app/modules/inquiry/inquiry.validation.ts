@@ -1,10 +1,9 @@
 import { z } from 'zod';
+import { checkValidID } from '../../../shared/checkValidID';
 
 export const InquiryZodValidations = z.object({
     body: z.object({
-        name: z.string({required_error: 'Name is required'}),
-        email: z.string({required_error: "Email is Required"}).email({message: "Invalid Email"}),
-        phone: z.string({required_error: "Phone is Required"}),
+        seller: checkValidID("Seller is required"),
         message: z.string({required_error: "Message is Required"})
     }),
 });

@@ -10,6 +10,7 @@ import requestIp from 'request-ip';
 import rateLimit from 'express-rate-limit';
 import ApiError from "./errors/ApiErrors";
 import { insertVisitorInDB } from "./Seed";
+import handleStripeWebhook from "./stripe/handleStripeWebhook";
 const app = express();
 
 const limiter = rateLimit({
@@ -27,6 +28,14 @@ const limiter = rateLimit({
         throw new ApiError(options?.statusCode, `Rate limit exceeded. Try again in ${options.windowMs / 60000} minutes.`);
     }
 });
+
+
+// Stripe webhook route
+app.use(
+    '/api/stripe/webhook',
+    express.raw({ type: 'application/json' }),
+    handleStripeWebhook
+);
 
 // morgan
 app.use(Morgan.successHandler);
@@ -63,7 +72,7 @@ app.use('/api/v1', router);
 app.get("/", (req: Request, res: Response) => {
     const remoteAddress = req.ip || req.connection.remoteAddress;
     insertVisitorInDB(remoteAddress as string)
-    res.send("Hey Backend, How can I assist you ");
+    res.send("Hey Ambitious People. Welcome to my World. How can I assist you ");
 })
 
 //global error handle

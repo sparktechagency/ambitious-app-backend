@@ -8,16 +8,9 @@ const inquirySchema = new Schema<IInquiry, InquiryModel>(
       ref: 'User',
       required: true,
     },
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    phone: {
-      type: String,
+    customer: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
     message: {

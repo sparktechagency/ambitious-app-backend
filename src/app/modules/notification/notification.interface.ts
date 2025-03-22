@@ -5,7 +5,7 @@ export type INotification = {
     receiver?: Types.ObjectId;
     read?: boolean;
     referenceId: Types.ObjectId;
-    screen: "INQUIRY" | "SELLER" | "BUSINESS";
+    screen: "INQUIRY" | "SELLER" | "BUSINESS" | "TRANSACTION";
     type?: "ADMIN";
 };
 

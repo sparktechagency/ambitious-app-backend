@@ -16,6 +16,7 @@ router.route("/")
         async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const image = getSingleFilePath(req.files, "image");
+                console.log(image)
                 req.body = { image, ...req.body };
                 next();
 
@@ -30,4 +31,26 @@ router.route("/")
         BlogController.getBlogs
     );
 
+
+
+router.route("/:id")
+    .patch(
+        auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+        fileUploadHandler(),
+        async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const image = getSingleFilePath(req.files, "image");
+                req.body = { image, ...req.body };
+                next();
+
+            } catch (error) {
+                res.status(500).json({ message: "Failed to Upload Image" });
+            }
+        },
+        BlogController.updateBlog
+    )
+    .delete(
+        auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+        BlogController.deleteBlog
+    );
 export const BlogRoutes = router;

@@ -14,7 +14,7 @@ const createReviewToDB = async(payload:IReview): Promise<IReview>=>{
 
 const getReviewsFromDB = async(): Promise<IReview[]>=>{
 
-    const results = await Review.find({});
+    const results = await Review.find({}).populate('user', 'name email role profile');
     return results;
 };
 

@@ -22,7 +22,8 @@ import { IUser } from '../user/user.interface';
 const loginUserFromDB = async (payload: ILoginData) => {
 
     const { email, password } = payload;
-    const isExistUser:any = await User.findOne({ email }).select('+password');
+    const userPromise = User.findOne({ email }).select('+password');
+    const [isExistUser] = await Promise.all([userPromise]);
     if (!isExistUser) {
         throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
     }

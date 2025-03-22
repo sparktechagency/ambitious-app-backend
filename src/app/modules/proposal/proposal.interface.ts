@@ -1,7 +1,13 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import { PROPOSAL } from '../../../enums/proposal';
 
 export type IProposal = {
-  // Define the interface for Proposal here
-};
+  _id?: Types.ObjectId;
+  customer: Types.ObjectId;
+  seller: Types.ObjectId;
+  business: Types.ObjectId;
+  price: number;
+  status: PROPOSAL
 
+};
 export type ProposalModel = Model<IProposal>;

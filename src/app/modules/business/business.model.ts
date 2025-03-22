@@ -4,7 +4,7 @@ import { IBusiness, BusinessModel } from './business.interface';
 const BusinessSchema = new Schema<IBusiness>(
   {
     category: { type: Schema.Types.ObjectId, required: true, ref: 'Category' },
-    seller: { type: Schema.Types.ObjectId, required: true, ref: 'Seller' },
+    seller: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     name: { type: String, required: true },
     description: { type: String, required: true },
     logo: { type: String, required: true },
@@ -18,9 +18,9 @@ const BusinessSchema = new Schema<IBusiness>(
     employees: { type: Number, required: true },
     founded: { type: String, required: true },
     reason: { type: String, required: true },
-    images: { type: [String], required: true },
-    documents: { type: [String], required: true },
-    status: { type: String, enum: ["Pending", "Approved", "Rejected", "Deleted"], required: true },
+    image: { type: [String], required: true },
+    doc: { type: [String], required: true },
+    status: { type: String, enum: ["Pending", "Approved", "Rejected", "Deleted"], default: "Pending" },
   }, 
   {timestamps: true}
 );

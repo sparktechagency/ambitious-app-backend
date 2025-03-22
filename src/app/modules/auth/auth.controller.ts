@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { AuthService } from './auth.service';
+import { JwtPayload } from 'jsonwebtoken';
 
 const verifyEmail = catchAsync(async (req: Request, res: Response) => {
     const { ...verifyData } = req.body;
@@ -55,7 +56,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const changePassword = catchAsync(async (req: Request, res: Response) => {
-    const user = req.user;
+    const user = req.user as JwtPayload;
     const { ...passwordData } = req.body;
     await AuthService.changePasswordToDB(user, passwordData);
 
@@ -104,7 +105,7 @@ const socialLogin = catchAsync(async (req: Request, res: Response) => {
 
 // delete user
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
-    const result = await AuthService.deleteUserFromDB(req.user, req.body.password);
+    const result = await AuthService.deleteUserFromDB(req.user as JwtPayload, req.body.password);
 
     sendResponse(res, {
         success: true,

@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import { JwtPayload } from 'jsonwebtoken';
 
 const createInquiry = async (req: Request, res: Response) => {
-    const result = await InquiryService.createInquiryInDB(req.body);
+    const result = await InquiryService.createInquiryInDB(req.user as JwtPayload, req.body);
     sendResponse(res, {
         statusCode: StatusCodes.CREATED,
         success: true,

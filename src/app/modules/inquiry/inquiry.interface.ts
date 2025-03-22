@@ -2,10 +2,8 @@ import { Model, Types } from 'mongoose';
 
 export type IInquiry = {
   _id: string;
+  customer: Types.ObjectId;
   seller: Types.ObjectId;
-  name: string;
-  email: string;
-  phone: string;
   message: string;
 };
 

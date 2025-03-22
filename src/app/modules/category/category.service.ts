@@ -5,10 +5,11 @@ import { Category } from './category.model'
 import mongoose from 'mongoose'
 
 const createCategoryToDB = async (payload: ICategory) => {
+
   if (!payload.name) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Category Name is Required");
   }
-  const isExistName = await Category.findOne({ name: name })
+  const isExistName = await Category.findOne({ name: payload.name })
 
   if (isExistName) {
     throw new ApiError(StatusCodes.NOT_ACCEPTABLE, "This Category Name Already Exist");

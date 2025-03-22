@@ -14,11 +14,12 @@ export type IBusiness = {
   socialMedia: string;
   ownership: string;
   revenue: number;
+  price: number;
   employees: number;
   founded: string;
   reason: string;
-  images: string[];
-  documents: string[];
+  image: string[];
+  doc: string[];
   status: "Pending" | "Approved" | "Rejected" | "Deleted";
 };
 

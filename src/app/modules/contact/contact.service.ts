@@ -1,10 +1,12 @@
 import { IContact } from "./contact.interface";
 import { Contact } from "./contact.model";
 import QueryBuilder from "../../../helpers/QueryBuilder";
+import ApiError from "../../../errors/ApiErrors";
+import { StatusCodes } from "http-status-codes";
 
 const createContactInDB = async (payload: IContact): Promise<IContact> => {
     const contact = await Contact.create(payload);
-    if (!contact) throw new Error('Failed to Submit Contact');
+    if (!contact) throw new  ApiError(StatusCodes.BAD_REQUEST, 'Failed to Submit Contact');
     return contact;
 }
 

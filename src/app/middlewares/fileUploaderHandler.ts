@@ -5,14 +5,9 @@ import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import ApiError from '../../errors/ApiErrors';
 
-const uploadDirectories: Record<string, string> = {
-    image: 'image'
-};
-
-
 const fileUploadHandler = () => {
 
-    //create upload folder
+    //create base folder
     const baseUploadDir = path.join(process.cwd(), 'uploads');
     if (!fs.existsSync(baseUploadDir)) {
         fs.mkdirSync(baseUploadDir);
@@ -27,19 +22,27 @@ const fileUploadHandler = () => {
 
     //create filename
     const storage = multer.diskStorage({
-
         destination: (req, file, cb) => {
-            const folderName = uploadDirectories[file.fieldname];
-
-            if (!folderName) {
-                cb(new ApiError(StatusCodes.BAD_REQUEST, 'File type not supported'), '');
+            let uploadDir;
+            switch (file.fieldname) {
+                case 'image':
+                    uploadDir = path.join(baseUploadDir, 'image');
+                    break;
+                case 'logo':
+                    uploadDir = path.join(baseUploadDir, 'logo');
+                    break;
+                case 'media':
+                    uploadDir = path.join(baseUploadDir, 'media');
+                    break;
+                case 'doc':
+                    uploadDir = path.join(baseUploadDir, 'doc');
+                    break;
+                default:
+                    throw new ApiError(StatusCodes.BAD_REQUEST, 'File is not supported');
             }
-
-            const uploadDir = path.join(baseUploadDir, folderName);
             createDir(uploadDir);
             cb(null, uploadDir);
         },
-
         filename: (req, file, cb) => {
             const fileExt = path.extname(file.originalname);
             const fileName =
@@ -56,8 +59,6 @@ const fileUploadHandler = () => {
 
     //file filter
     const filterFilter = (req: Request, file: any, cb: FileFilterCallback) => {
-
-        // console.log("file handler",file)
         if (file.fieldname === 'image') {
             if (
                 file.mimetype === 'image/jpeg' ||
@@ -66,17 +67,53 @@ const fileUploadHandler = () => {
             ) {
                 cb(null, true);
             } else {
-                cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .jpeg, .png, .jpg file supported'))
+                cb(
+                    new ApiError(
+                        StatusCodes.BAD_REQUEST,
+                        'Only .jpeg, .png, .jpg file supported'
+                    )
+                );
             }
-        } else {
-            cb(new ApiError(StatusCodes.BAD_REQUEST, 'This file is not supported'))
+        } else if (file.fieldname === 'media') {
+            if (file.mimetype === 'video/mp4' || file.mimetype === 'audio/mpeg') {
+                cb(null, true);
+            } else {
+                cb(
+                    new ApiError(
+                        StatusCodes.BAD_REQUEST,
+                        'Only .mp4, .mp3, file supported'
+                    )
+                );
+            }
+        } else if (file.fieldname === 'doc') {
+            if (file.mimetype === 'application/pdf') {
+                cb(null, true);
+            } else {
+                cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only pdf supported'));
+            }
+        }  else if (file.fieldname === 'logo') {
+            if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
+                cb(null, true);
+            } else {
+                cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only pdf supported'));
+            }
+        } 
+        
+        else {
+            cb(new ApiError(StatusCodes.BAD_REQUEST, 'This file is not supported'));
         }
     };
 
-    const upload = multer({ storage: storage, fileFilter: filterFilter })
-        .fields([{ name: 'image', maxCount: 3 }]);
+    const upload = multer({
+        storage: storage,
+        fileFilter: filterFilter,
+    }).fields([
+        { name: 'image', maxCount: 20 },
+        { name: 'logo', maxCount: 1 },
+        { name: 'media', maxCount: 3 },
+        { name: 'doc', maxCount: 3 },
+    ]);
     return upload;
-
 };
 
 export default fileUploadHandler;

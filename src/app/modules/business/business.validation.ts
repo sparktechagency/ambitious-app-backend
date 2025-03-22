@@ -13,12 +13,11 @@ export const BusinessZodValidationSchema = z.object({
         website: z.string({ required_error: "Website is Required" }).url({ message: "Invalid URL" }),
         socialMedia: z.string({ required_error: "Social Media is Required" }),
         ownership: z.string({ required_error: "Ownership is Required" }),
-        revenue: z.number({ required_error: "Revenue is Required" }).nonnegative({message: "Revenue Must include Positive value"}),
-        employees: z.number({ required_error: "Employees is Required" }).nonnegative({message: "Revenue Must include Positive value"}),
+        revenue: z.number({ required_error: "Revenue is Required" }).nonnegative({ message: "Revenue Must include Positive value" }),
+        employees: z.number({ required_error: "Employees is Required" }).nonnegative({ message: "Revenue Must include Positive value" }),
         founded: z.string({ required_error: "Founded is Required" }),
         reason: z.string({ required_error: "Reason is Required" }),
-        images: z.array(z.string(), { required_error: "Images are Required" }),
-        documents: z.array(z.string(), { required_error: "Documents are Required" }),
-        status: z.enum(["Pending", "Approved", "Rejected", "Deleted"], { required_error: "Status is Required" }),
+        image: z.array(z.string(), { required_error: "Image are Required" }),
+        doc: z.array(z.string(), { required_error: "Document are Required" })
     })
 });

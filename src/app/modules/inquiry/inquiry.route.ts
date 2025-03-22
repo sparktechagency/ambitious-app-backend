@@ -9,11 +9,12 @@ const router = express.Router();
 
 router.route("/")
     .post(
-        auth(USER_ROLES.SELLER),
+        auth(USER_ROLES.CUSTOMER),
         validateRequest(InquiryZodValidations),
         InquiryController.createInquiry
     )
     .get(
+        auth(USER_ROLES.SELLER),
         InquiryController.getInquiries
     );
     

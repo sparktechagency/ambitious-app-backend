@@ -5,7 +5,7 @@ import { CategoryController } from './category.controller'
 const router = express.Router()
 
 router.route('/')
-  .patch(
+  .post(
     auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
     CategoryController.createCategory,
   )
