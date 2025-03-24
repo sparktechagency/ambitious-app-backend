@@ -26,7 +26,7 @@ const proposalSchema = new Schema<IProposal>(
     status: {
       type: String,
       enum: Object.values(PROPOSAL),
-      required: true
+      default: PROPOSAL.Pending
     }
   },
   { timestamps: true }

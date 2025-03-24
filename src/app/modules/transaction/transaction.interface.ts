@@ -4,7 +4,7 @@ export type ITransaction = {
     _id?: Types.ObjectId;
     customer: Types.ObjectId;
     seller: Types.ObjectId;
-    business: Types.ObjectId;
+    proposal: Types.ObjectId;
     price: number;
     txid: string;
 }

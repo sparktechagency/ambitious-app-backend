@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import { JwtPayload } from 'jsonwebtoken';
 import QueryBuilder from '../../../helpers/QueryBuilder';
 import Business from '../business/business.model';
+import { PROPOSAL } from '../../../enums/proposal';
 
 const makeProposalInDB = async ( user: JwtPayload, payload: IProposal ): Promise<IProposal> =>{
 
@@ -51,13 +52,13 @@ const approvedProposalInDB = async ( id: string, status: string ): Promise<IProp
 
 const proposalsFromDB = async (user: JwtPayload, query: Record<string, any>): Promise<{proposals: IProposal[], pagination:any}> =>{
     const result = new QueryBuilder(Proposal.find({seller: user.id}), query).paginate();
-    const proposals = await result.queryModel.populate("customer", "name profile email");
+    const proposals = await result.queryModel.populate("customer", "name profile email").populate("business", "name price");;
     const pagination = await result.getPaginationInfo();
     return { proposals, pagination };
 }
 
 const customerProposalsFromDB = async (user: JwtPayload, query: Record<string, any>): Promise<{proposals: IProposal[], pagination:any}> =>{
-    const result = new QueryBuilder(Proposal.find({seller: user.id}), query).paginate();
+    const result = new QueryBuilder(Proposal.find({customer: user.id}), query).paginate();
     const proposals = await result.queryModel.populate("seller", "name profile email").populate("business", "name price");
     const pagination = await result.getPaginationInfo();
     return { proposals, pagination };

@@ -4,12 +4,11 @@ import { ChatController } from './chat.controller';
 import { USER_ROLES } from '../../../enums/user';
 const router = express.Router();
 
-router.route("/")
-  .post(
+router.post("/:id",
     auth(USER_ROLES.CUSTOMER),
     ChatController.createChat
   )
-  .get(
+router.get("/",
     auth(USER_ROLES.SELLER, USER_ROLES.CUSTOMER),
     ChatController.getChat
   );

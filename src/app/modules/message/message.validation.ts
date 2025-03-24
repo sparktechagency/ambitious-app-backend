@@ -8,6 +8,6 @@ export const MessageZodSchema = z.object({
         image: z.string().optional(),
         icon: z.string().optional(),
         video: z.string().optional(),
-        type: z.enum(['text', 'image', 'video', 'icon', 'both']).optional(),
+        type: z.enum(['text', 'image', 'video', 'doc', 'both']).optional(),
     })
 });

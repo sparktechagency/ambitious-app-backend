@@ -14,6 +14,7 @@ export const BusinessZodValidationSchema = z.object({
         socialMedia: z.string({ required_error: "Social Media is Required" }),
         ownership: z.string({ required_error: "Ownership is Required" }),
         revenue: z.number({ required_error: "Revenue is Required" }).nonnegative({ message: "Revenue Must include Positive value" }),
+        price: z.number({ required_error: "Price is Required" }).nonnegative({ message: "Price Must include Positive value" }),
         employees: z.number({ required_error: "Employees is Required" }).nonnegative({ message: "Revenue Must include Positive value" }),
         founded: z.string({ required_error: "Founded is Required" }),
         reason: z.string({ required_error: "Reason is Required" }),

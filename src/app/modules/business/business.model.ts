@@ -15,6 +15,7 @@ const BusinessSchema = new Schema<IBusiness>(
     socialMedia: { type: String, required: true },
     ownership: { type: String, required: true },
     revenue: { type: Number, required: true },
+    price: { type: Number, required: true },
     employees: { type: Number, required: true },
     founded: { type: String, required: true },
     reason: { type: String, required: true },

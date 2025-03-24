@@ -22,7 +22,7 @@ router.get("/customer-proposal",
 
 router.route('/:id')
     .patch(
-        auth(USER_ROLES.CUSTOMER),
+        auth(USER_ROLES.SELLER),
         ProposalController.approvedProposal
     )
 

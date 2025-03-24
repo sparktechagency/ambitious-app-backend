@@ -1,8 +1,18 @@
+import { StatusCodes } from 'http-status-codes';
+import ApiError from '../../../errors/ApiErrors';
 import QueryBuilder from '../../../helpers/QueryBuilder';
+import { User } from '../user/user.model';
 import { IChat } from './chat.interface';
 import { Chat } from './chat.model';
+import { Message } from '../message/message.model';
 
 const createChatToDB = async (payload: any): Promise<IChat> => {
+
+    const isExistFriend = await User.findOne({ _id: payload[1], role: "SELLER" });
+    if (!isExistFriend) {
+        throw new ApiError( StatusCodes.BAD_REQUEST, 'User not found');
+    }
+
     const isExistChat: IChat | null = await Chat.findOne({
         participants: { $all: payload },
     });
@@ -14,31 +24,32 @@ const createChatToDB = async (payload: any): Promise<IChat> => {
     return chat;
 }
 
-const getChatFromDB = async (user: any, query: Record<string, any>): Promise<{ friends:IChat[], pagination:any } > => {
+const getChatFromDB = async (user: any, query: Record<string, any>): Promise<{ persons:IChat[], pagination:any } > => {
 
     const result = new QueryBuilder(Chat.find({ participants: { $in: [user.id] } }).populate({
         path: 'participants',
         select: '-_id name profile occupation',
         match: {
-            _id: { $ne: user.id },
-            ...(query?.search && { name: { $regex: query?.search, $options: 'i' } })
+            _id: { $ne: user.id }
         }
     }), query).paginate();
     
     const chats = await result.queryModel.lean()
     const pagination = await result.getPaginationInfo();
 
-    const friends = chats?.filter((chat: any) => chat?.participants?.length > 0)
-    .map((friend: any) => {
-        const { _id, participants } = friend;
+    const persons = await Promise.all(chats.map(async (chat: any) => {
+        const { _id, participants } = chat;
         const participant = participants[0];
+        const lastMessage = await Message.findOne({ chatId: chat._id }).sort({ createdAt: -1 }).lean();   
         return {
-            _id,
-            ...participant
+            chatId: _id,
+            ...participant,
+            lastMessage
         };
-    });
+    }));
 
-    return { friends, pagination };
+
+    return { persons, pagination };
 };
 
 export const ChatService = { createChatToDB, getChatFromDB };

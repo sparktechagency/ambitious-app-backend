@@ -9,14 +9,15 @@ import { JwtPayload } from "jsonwebtoken";
 import { generateTxid } from "../../../util/generateTxid";
 import QueryBuilder from "../../../helpers/QueryBuilder";
 import Business from "../business/business.model";
+import { Proposal } from "../proposal/proposal.model";
 
 const makePayment = async (user: JwtPayload, payload: ITransaction) => {
     const session = await mongoose.startSession();
     session.startTransaction();
 
-    const isExistBusiness = await Business.findById(payload.business).lean();
-    if(!isExistBusiness){
-        throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid Business")
+    const isExistProposal = await Proposal.findById(payload.proposal).lean();
+    if(!isExistProposal){
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid Proposal ID");
     }
 
     try {
@@ -31,7 +32,7 @@ const makePayment = async (user: JwtPayload, payload: ITransaction) => {
                         product_data: {
                             name: `Icon Purchase Payment`,
                         },
-                        unit_amount: Math.trunc(Number(isExistBusiness?.price) * 100),
+                        unit_amount: Math.trunc(Number(isExistProposal?.price) * 100),
                     },
                     quantity: 1,
                 },
@@ -47,10 +48,10 @@ const makePayment = async (user: JwtPayload, payload: ITransaction) => {
 
         const transactionPayload = {
             customer: user?.id,
-            seller: isExistBusiness?.seller,
-            business: isExistBusiness?._id,
+            seller: isExistProposal?.seller,
+            proposal: isExistProposal?._id,
             txid: generateTxid(),
-            price: isExistBusiness?.price
+            price: isExistProposal?.price
         };
 
         const transaction: ITransaction & {_id: mongoose.Types.ObjectId} = (await Transaction.create([transactionPayload], { session }))[0];

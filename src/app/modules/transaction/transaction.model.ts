@@ -13,9 +13,9 @@ const transactionSchema = new Schema<ITransaction, TransactionModel>(
             ref: "User",
             required: true,
         },
-        business: {
+        proposal: {
             type: Schema.Types.ObjectId,
-            ref: "Business",
+            ref: "Proposal",
             required: true,
         },
         price: {

@@ -8,7 +8,7 @@ import { JwtPayload } from "jsonwebtoken";
 const router = express.Router();
 
 router.post("/",
-    auth(USER_ROLES.SELLER),
+    auth(USER_ROLES.SELLER, USER_ROLES.CUSTOMER),
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             const {rating, ...othersData } = req.body;
@@ -21,7 +21,7 @@ router.post("/",
         }
     },
     validateRequest(reviewZodValidationSchema),
-    auth(USER_ROLES.SELLER), ReviewController.createReview
+    ReviewController.createReview
 );
 
 router.get("/",
