@@ -1,7 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
-import ApiError from '../../../errors/ApiError';
+import ApiError from '../../../errors/ApiErrors';
 import { IUser } from '../user/user.interface';
 import { User } from '../user/user.model';
+import { Visitor } from '../visitor/visitor.model';
+import { Transaction } from '../transaction/transaction.model';
 
 const createAdminToDB = async (payload: IUser): Promise<IUser> => {
     const createAdmin: any = await User.create(payload);
@@ -32,8 +34,35 @@ const getAdminFromDB = async (): Promise<IUser[]> => {
     return admins;
 };
 
+const summaryFromDB = async () => {
+
+    const [ totalSeller, totalCustomer, TotalVisitor, TotalRevenue ] = await Promise.all([
+        User.countDocuments({ role: 'SELLER' }),
+        User.countDocuments({ role: 'CUSTOMER' }),
+        Visitor.countDocuments(),
+        Transaction.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: { $multiply: ['$price', 0.1] } }
+                }
+            }
+        ])
+        
+    ]);
+
+    const admins = {
+        totalSeller,
+        totalCustomer,
+        TotalVisitor,
+        TotalRevenue: TotalRevenue[0]?.totalRevenue || 0
+    };
+    return admins;
+};
+
 export const AdminService = {
     createAdminToDB,
     deleteAdminFromDB,
-    getAdminFromDB
+    getAdminFromDB,
+    summaryFromDB
 };

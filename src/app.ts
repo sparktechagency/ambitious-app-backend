@@ -11,6 +11,7 @@ import rateLimit from 'express-rate-limit';
 import ApiError from "./errors/ApiErrors";
 import { insertVisitorInDB } from "./Seed";
 import handleStripeWebhook from "./stripe/handleStripeWebhook";
+import compression from "compression";
 const app = express();
 
 const limiter = rateLimit({
@@ -44,10 +45,14 @@ app.use(Morgan.errorHandler);
 
 //body parser
 app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestIp.mw());
 app.use(limiter);
+
+// Enable Gzip compression for all responses
+app.use(compression());
 
 //file retrieve
 app.use(express.static('uploads'));

@@ -1,6 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { INotification } from './notification.interface';
 import { Notification } from './notification.model';
+import QueryBuilder from '../../../helpers/QueryBuilder';
 
 // get notifications
 const getNotificationFromDB = async ( user: JwtPayload ): Promise<INotification> => {
@@ -34,9 +35,13 @@ const readNotificationToDB = async ( user: JwtPayload): Promise<INotification | 
 };
 
 // get notifications for admin
-const adminNotificationFromDB = async () => {
-    const result = await Notification.find({ type: 'ADMIN' });
-    return result;
+const adminNotificationFromDB = async (query: Record<string, any>): Promise<{notifications: INotification[], pagination:any}> => {
+
+    const result = new QueryBuilder(Notification.find({ type: 'ADMIN' }), query).paginate().search(["amount"]).filter();
+    const notifications = await result.queryModel.lean();
+    const pagination = await result.getPaginationInfo();
+
+    return { notifications, pagination };
 };
 
 // read notifications only for admin

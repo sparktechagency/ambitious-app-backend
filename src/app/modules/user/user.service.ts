@@ -89,9 +89,49 @@ const updateProfileToDB = async (user: JwtPayload, payload: Partial<IUser>): Pro
     return updateDoc;
 };
 
+
+const userListFromDB = async (): Promise<{ users: any[] }> => {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), 0, 1); // Start of the current year
+    const endDate = new Date(now.getFullYear() + 1, 0, 1); // Start of next year
+
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const users = months.map((month) => ({
+        month,
+        customer: 0,
+        seller: 0,
+    }));
+
+    const visitorsAnalytics = await User.aggregate([
+        {
+            $match: {
+                createdAt: { $gte: startDate, $lt: endDate }
+            }
+        },
+        {
+            $group: {
+                _id: { month: { $month: "$createdAt" } },
+                total: { $sum: 1 }
+            }
+        }
+    ]);
+
+   
+    visitorsAnalytics.forEach((stat: any) => {
+        const monthIndex = stat._id.month - 1;
+        users[monthIndex].customer = stat.total;
+        users[monthIndex].seller = stat.total;
+    });
+
+    return { users };
+};
+
+
 export const UserService = {
     createUserToDB,
     getUserProfileFromDB,
     updateProfileToDB,
-    createAdminToDB
+    createAdminToDB,
+    userListFromDB
 };

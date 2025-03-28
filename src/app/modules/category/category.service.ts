@@ -3,6 +3,7 @@ import ApiError from '../../../errors/ApiErrors'
 import { ICategory } from './category.interface'
 import { Category } from './category.model'
 import mongoose from 'mongoose'
+import Business from '../business/business.model'
 
 const createCategoryToDB = async (payload: ICategory) => {
 
@@ -57,9 +58,21 @@ const deleteCategoryToDB = async (id: string): Promise<ICategory | null> => {
   return deleteCategory
 }
 
+
+const adminCategoryFromDB = async (): Promise<ICategory[]> => {
+
+  const category = await Category.find({}).select("name").lean();
+  const result = await Promise.all(category.map(async (item:any) => {
+    const totalBusiness = await Business.countDocuments({ category: item._id })
+    return { ...item, totalBusiness }
+  }))
+  return result as ICategory[]
+}
+
 export const CategoryService = {
   createCategoryToDB,
   getCategoriesFromDB,
   updateCategoryToDB,
-  deleteCategoryToDB
+  deleteCategoryToDB,
+  adminCategoryFromDB
 }

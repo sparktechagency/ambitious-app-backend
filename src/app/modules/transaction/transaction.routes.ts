@@ -13,6 +13,12 @@ router.route('/')
     .get(
         auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
         TransactionController.transactions
-    )
+    );
 
-export const TransactionRoutes = router;    
+
+router.post("/connected-account",
+    auth(USER_ROLES.SELLER),
+    TransactionController.createAccountToStripe
+);
+
+export const TransactionRoutes = router;   

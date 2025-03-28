@@ -5,7 +5,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 
 const visitorList = catchAsync(async(req: Request, res: Response)=>{
-    const result = await VisitorService.visitorListFromDB(req.query);
+    const result = await VisitorService.visitorListFromDB();
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,

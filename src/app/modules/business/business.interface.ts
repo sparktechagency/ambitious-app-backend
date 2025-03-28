@@ -17,7 +17,6 @@ export type IBusiness = {
   price: number;
   employees: number;
   founded: string;
-  reason: string;
   image: string[];
   doc: string[];
   status: "Pending" | "Approved" | "Rejected" | "Deleted";

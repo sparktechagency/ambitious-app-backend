@@ -8,8 +8,8 @@ import stripe from "../../../config/stripe";
 import { JwtPayload } from "jsonwebtoken";
 import { generateTxid } from "../../../util/generateTxid";
 import QueryBuilder from "../../../helpers/QueryBuilder";
-import Business from "../business/business.model";
 import { Proposal } from "../proposal/proposal.model";
+import { User } from "../user/user.model";
 
 const makePayment = async (user: JwtPayload, payload: ITransaction) => {
     const session = await mongoose.startSession();
@@ -51,7 +51,8 @@ const makePayment = async (user: JwtPayload, payload: ITransaction) => {
             seller: isExistProposal?.seller,
             proposal: isExistProposal?._id,
             txid: generateTxid(),
-            price: isExistProposal?.price
+            price: isExistProposal?.price,
+            sessionId: stripeSession.id
         };
 
         const transaction: ITransaction & {_id: mongoose.Types.ObjectId} = (await Transaction.create([transactionPayload], { session }))[0];
@@ -83,14 +84,72 @@ const makePayment = async (user: JwtPayload, payload: ITransaction) => {
 
 const transactionsFromDB = async (user: JwtPayload, query: Record<string, any>): Promise<{ transactions: ITransaction[], pagination: any }> => {
 
-    const result = new QueryBuilder(Transaction.find(), query).paginate().filter();
-    const transactions = await result.queryModel.lean();
-    const pagination = await result.getPaginationInfo();
+    const result = new QueryBuilder(Transaction.find({status: "Paid"}), query).paginate().search(["amount"]).filter();
+    const transactions = await result.queryModel
+        .populate("customer", "name profile email")
+        .populate("seller", "name profile email")
+        .populate({
+            path: "proposal", 
+            select: "business", 
+            populate: {
+                path: "business",
+                select: "name"
+            }
+        })
+        .lean();
 
+    const pagination = await result.getPaginationInfo();
     return { transactions, pagination };
+}
+
+
+const createAccountToStripe = async (user: JwtPayload) => {
+   
+
+    const existingUser: any = await User.findById(user.id).select("+accountInformation").lean();
+    if (existingUser?.accountInformation?.accountUrl) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "You already connected your bank on Stripe.");
+    }
+
+    // Create account for Canada
+    const account = await stripe.accounts.create({
+        type: "express",
+        country: "SG",
+        email: user?.email,
+        capabilities: {
+            card_payments: { requested: true },
+            transfers: { requested: true },
+        },
+    });
+
+    if (!account) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Failed to create account.");
+    }
+
+    // Create an account link for onboarding
+    const accountLink = await stripe.accountLinks.create({
+        account: account.id,
+        refresh_url: 'http://10.0.80.75:6008/failed',
+        return_url: 'https://10.0.80.75:6008/success',
+        type: 'account_onboarding',
+    });
+
+    // Update the user account with the Stripe account ID
+    const updateAccount = await User.findOneAndUpdate(
+        { _id: user.id },
+        { "accountInformation.stripeAccountId": account.id },
+        { new: true }
+    );
+
+    if (!updateAccount) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Failed to update account.");
+    }
+
+    return accountLink?.url; // Return the onboarding link
 }
 
 export const TransactionService = {
     makePayment,
-    transactionsFromDB
+    transactionsFromDB,
+    createAccountToStripe
 }

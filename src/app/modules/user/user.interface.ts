@@ -2,10 +2,11 @@ import { Model, Types } from 'mongoose';
 import { USER_ROLES } from '../../../enums/user';
 
 interface IStripeAccountInfo {
-    status: string;
-    stripeAccountId: string;
-    externalAccountId: string;
-    currency: string;
+    status?: boolean;
+    stripeAccountId?: string;
+    externalAccountId?: string;
+    currency?: string;
+    accountUrl?: string;
 }
 
 interface IAuthenticationProps {

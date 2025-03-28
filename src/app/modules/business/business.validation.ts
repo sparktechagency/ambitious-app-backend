@@ -17,7 +17,6 @@ export const BusinessZodValidationSchema = z.object({
         price: z.number({ required_error: "Price is Required" }).nonnegative({ message: "Price Must include Positive value" }),
         employees: z.number({ required_error: "Employees is Required" }).nonnegative({ message: "Revenue Must include Positive value" }),
         founded: z.string({ required_error: "Founded is Required" }),
-        reason: z.string({ required_error: "Reason is Required" }),
         image: z.array(z.string(), { required_error: "Image are Required" }),
         doc: z.array(z.string(), { required_error: "Document are Required" })
     })

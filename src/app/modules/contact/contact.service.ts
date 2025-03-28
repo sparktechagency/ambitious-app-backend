@@ -12,7 +12,7 @@ const createContactInDB = async (payload: IContact): Promise<IContact> => {
 
 const getContactsFromDB = async (query: Record<string, any>): Promise<{ contacts: IContact[], pagination: any }> => {
 
-    const result = new QueryBuilder(Contact.find({}), query).paginate();
+    const result = new QueryBuilder(Contact.find({}), query).paginate().search(["name", "email", "phone"]).filter();
     const contacts = await result.queryModel;
     const pagination = await result.getPaginationInfo();
 

@@ -67,19 +67,11 @@ const userSchema = new Schema<IUser, UserModal>(
             select: 0
         },
         accountInformation: {
-            status: {
-              type: Boolean,
-                default: false,
-            },
-            stripeAccountId: {
-                type: String,
-            },
-            externalAccountId: {
-                type: String,
-            },
-            currency: {
-                type: String,
-            }
+            status: { type: Boolean },
+            stripeAccountId: {type: String },
+            externalAccountId: { type: String },
+            currency: { type: String },
+            accountUrl: { type: String }
         }
     },
     {
@@ -116,6 +108,12 @@ userSchema.pre('save', async function (next) {
     const isExist = await User.findOne({ email: this.email });
     if (isExist) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already exist!');
+    }
+
+    if(this.role === USER_ROLES.SELLER) {
+        this.accountInformation ={
+            status: false
+        }
     }
   
     //password hash

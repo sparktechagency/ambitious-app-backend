@@ -15,7 +15,7 @@ const createBlogInDB = async (payload: BlogModel): Promise<IBlog> => {
 
 const getBlogsFromDB = async (query: Record<string, any>): Promise<{ blogs: IBlog[], pagination: any }> => {
 
-    const result = new QueryBuilder(Blog.find({}), query).paginate();
+    const result = new QueryBuilder(Blog.find({}), query).paginate().search(["title"]);
     const blogs = await result.queryModel;
     const pagination = await result.getPaginationInfo();
 

@@ -24,6 +24,10 @@ router
     .post(
         UserController.createUser
     )
+    .get(
+        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        UserController.userList
+    )
     .patch(
         auth(USER_ROLES.ADMIN, USER_ROLES.SELLER, USER_ROLES.CUSTOMER, USER_ROLES.SUPER_ADMIN),
         fileUploadHandler(),

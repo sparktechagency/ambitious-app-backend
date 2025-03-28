@@ -41,8 +41,22 @@ const getAdmin = catchAsync(async (req: Request, res: Response) => {
 
 });
 
+
+const summaryCount = catchAsync(async (req: Request, res: Response) => {
+
+    const result = await AdminService.summaryFromDB();
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Home Summary Retrieved Successfully',
+        data: result
+    });
+
+});
+
 export const AdminController = {
     deleteAdmin,
     createAdmin,
-    getAdmin
+    getAdmin,
+    summaryCount
 };

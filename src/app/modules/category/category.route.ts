@@ -11,6 +11,10 @@ router.route('/')
   )
   .get(CategoryController.getCategories)
 
+router.get('/admin-category'
+  , auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+  CategoryController.adminCategory
+)
 router.route('/:id')
   .patch(
     auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),

@@ -27,6 +27,12 @@ const transactionSchema = new Schema<ITransaction, TransactionModel>(
             required: true,
             unique: true,
         },
+        sessionId: {type: String},
+        status: {
+            type: String,
+            enum: ["Paid", "Pending"],
+            default: "Pending"
+        }
     },
     { timestamps: true }
 );

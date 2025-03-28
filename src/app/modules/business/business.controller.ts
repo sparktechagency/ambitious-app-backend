@@ -13,8 +13,7 @@ const createBusiness = catchAsync( async (req: Request, res: Response) => {
         message: "Business Submitted Successfully",
         data: result
     })
-})
-
+});
 
 const approvedBusiness = catchAsync( async (req: Request, res: Response) => {
     const result = await BusinessService.approvedBusinessInDB(req.params.id, req.body.status);
@@ -24,7 +23,8 @@ const approvedBusiness = catchAsync( async (req: Request, res: Response) => {
         message: `Business ${req.body.status} Successfully`,
         data: result
     })
-})
+});
+
 const businessDetails = catchAsync( async (req: Request, res: Response) => {
     const result = await BusinessService.businessDetailsFromDB(req.user as JwtPayload);
     sendResponse(res, {
@@ -33,7 +33,8 @@ const businessDetails = catchAsync( async (req: Request, res: Response) => {
         message: "Business Details Retrieved Successfully",
         data: result
     })
-})
+});
+
 const businessList = catchAsync( async (req: Request, res: Response) => {
     const result = await BusinessService.businessListFromDB(req.query);
     sendResponse(res, {
@@ -42,7 +43,7 @@ const businessList = catchAsync( async (req: Request, res: Response) => {
         message: "Business List Retrieved Successfully",
         data: result
     })
-})
+});
 
 const businessEveryone = catchAsync( async (req: Request, res: Response) => {
     const result = await BusinessService.businessEveryoneFromDB(req.query);
@@ -52,7 +53,7 @@ const businessEveryone = catchAsync( async (req: Request, res: Response) => {
         message: "Business List Retrieved Successfully",
         data: result
     })
-})
+});
 
 const businessDetailsForCustomer = catchAsync( async (req: Request, res: Response) => {
     const result = await BusinessService.businessDetailsForCustomerFromDB(req.params.id);
@@ -62,7 +63,37 @@ const businessDetailsForCustomer = catchAsync( async (req: Request, res: Respons
         message: "Business Details Retrieved Successfully",
         data: result
     })
-})
+});
+
+const businessListForSeller = catchAsync( async (req: Request, res: Response) => {
+    const result = await BusinessService.businessListForSellerFromDB(req.user as JwtPayload, req.query);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Business List Retrieved Successfully",
+        data: result
+    });
+});
+
+const deleteBusiness = catchAsync( async (req: Request, res: Response) => {
+    const result = await BusinessService.deleteBusinessFromDB(req.params.id);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Business Deleted Successfully",
+        data: result
+    });
+});
+
+const updateBusiness = catchAsync( async (req: Request, res: Response) => {
+    const result = await BusinessService.updateBusinessInDB(req.params.id, req.body);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Business Updated Successfully",
+        data: result
+    });
+});
 
 export const BusinessController = { 
     createBusiness,
@@ -70,5 +101,8 @@ export const BusinessController = {
     businessList,
     businessDetails,
     businessEveryone,
-    businessDetailsForCustomer
+    businessDetailsForCustomer,
+    businessListForSeller,
+    deleteBusiness,
+    updateBusiness
 };

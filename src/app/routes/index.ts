@@ -1,7 +1,6 @@
 import express from 'express';
 import { UserRoutes } from '../modules/user/user.routes';
 import { AuthRoutes } from '../modules/auth/auth.routes';
-import { InquiryRoutes } from '../modules/inquiry/inquiry.route';
 import { ContactRoutes } from '../modules/contact/contact.route';
 import { BlogRoutes } from '../modules/blog/blog.route';
 import { BusinessRoutes } from '../modules/business/business.route';
@@ -14,12 +13,13 @@ import { CategoryRoutes } from '../modules/category/category.route';
 import { TransactionRoutes } from '../modules/transaction/transaction.routes';
 import { ChatRoutes } from '../modules/chat/chat.routes';
 import { MessageRoutes } from '../modules/message/message.routes';
+import { NotificationRoutes } from '../modules/notification/notification.routes';
+import { AdminRoutes } from '../modules/admin/admin.route';
 const router = express.Router();
 
 const apiRoutes = [
     { path: "/user", route: UserRoutes },
     { path: "/auth", route: AuthRoutes },
-    { path: "/inquiry", route: InquiryRoutes },
     { path: "/contact", route: ContactRoutes },
     { path: "/blog", route: BlogRoutes },
     { path: "/business", route: BusinessRoutes },
@@ -32,6 +32,8 @@ const apiRoutes = [
     { path: "/transaction", route: TransactionRoutes },
     { path: "/chat", route: ChatRoutes },
     { path: "/message", route: MessageRoutes },
+    { path: "/notification", route: NotificationRoutes },
+    { path: "/admin", route: AdminRoutes },
 
 ]
 

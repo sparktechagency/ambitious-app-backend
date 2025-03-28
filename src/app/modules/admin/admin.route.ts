@@ -19,6 +19,11 @@ router.get(
     AdminController.getAdmin
 );
 
+router.get('/',
+    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+    AdminController.summaryCount
+);
+
 router.delete(
     '/:id',
     auth(USER_ROLES.SUPER_ADMIN),

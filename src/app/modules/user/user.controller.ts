@@ -64,9 +64,21 @@ const updateProfile = catchAsync( async (req: Request, res: Response, next: Next
     });
 });
 
+const userList = catchAsync(async (req: Request, res: Response) => {
+    const result = await UserService.userListFromDB();
+
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'User Statistic Retrieved successfully',
+        data: result
+    });
+});
+
 export const UserController = { 
     createUser, 
     createAdmin, 
     getUserProfile, 
-    updateProfile
+    updateProfile,
+    userList
 };

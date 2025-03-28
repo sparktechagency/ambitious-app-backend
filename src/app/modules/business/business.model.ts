@@ -18,7 +18,6 @@ const BusinessSchema = new Schema<IBusiness>(
     price: { type: Number, required: true },
     employees: { type: Number, required: true },
     founded: { type: String, required: true },
-    reason: { type: String, required: true },
     image: { type: [String], required: true },
     doc: { type: [String], required: true },
     status: { type: String, enum: ["Pending", "Approved", "Rejected", "Deleted"], default: "Pending" },

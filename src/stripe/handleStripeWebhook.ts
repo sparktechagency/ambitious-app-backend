@@ -6,6 +6,8 @@ import { logger } from '../shared/logger';
 import config from '../config';
 import ApiError from '../errors/ApiErrors';
 import stripe from '../config/stripe';
+import { handleAccountConnectEvent } from './handleConnectedAccount';
+import { handleCheckoutSession } from './handleCheckoutSession';
 
 const handleStripeWebhook = async (req: Request, res: Response) => {
 
@@ -28,14 +30,20 @@ const handleStripeWebhook = async (req: Request, res: Response) => {
     }
 
     // Extract event data and type
-    const data = event.data.object as Stripe.Subscription | Stripe.Account;
+    const data = event.data.object as Stripe.Checkout.Session | Stripe.Account;
     const eventType = event.type;
 
     // Handle the event based on its type
     try {
         switch (eventType) {
-            case 'customer.subscription.created':
-                // await handleSubscriptionCreated(data as Stripe.Subscription);
+            case 'account.updated':
+                await handleAccountConnectEvent(data as Stripe.Account);
+                break;
+            case 'checkout.session.completed':
+                const session = event.data.object as Stripe.Checkout.Session;
+                if (session.payment_status === "paid") {
+                    await handleCheckoutSession(session as Stripe.Checkout.Session);
+                }
                 break;
 
             default:

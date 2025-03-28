@@ -19,9 +19,9 @@ router.route('/')
             try {
                 const user = req.user as JwtPayload;
                 const { revenue, price, employees, ...otherPayload } = req.body;
-                const logo = getSingleFilePath(req.files, "image");
-                const image = getMultipleFilesPath(req.files, "image");
-                const doc = getMultipleFilesPath(req.files, "doc");
+                const logo =  getSingleFilePath(req.files, "image");
+                const image =  getMultipleFilesPath(req.files, "image");
+                const doc =  getMultipleFilesPath(req.files, "doc");
 
                 req.body = {
                     seller: user.id,
@@ -51,9 +51,35 @@ router.get("/listing",
     BusinessController.businessEveryone
 )
 
-router.get("/details",
-    auth(USER_ROLES.SELLER, USER_ROLES.CUSTOMER),
-    BusinessController.businessDetails
+router.get("/seller-business",
+    auth(USER_ROLES.SELLER),
+    BusinessController.businessListForSeller
+)
+
+router.patch("/update/:id",
+    auth(USER_ROLES.SELLER),
+    fileUploadHandler(),
+        async (req: Request, res: Response, next: NextFunction) => {
+
+            try {
+                const { revenue, price, employees, ...otherPayload } = req.body;
+                const logo =  getSingleFilePath(req.files, "image");
+                const image =  getMultipleFilesPath(req.files, "image");
+                const doc =  getMultipleFilesPath(req.files, "doc");
+
+                req.body = {
+                    logo,
+                    image,
+                    doc,
+                    ...otherPayload
+                };
+                next();
+
+            } catch (error) {
+                res.status(500).json({ message: "Failed to convert string to number" });
+            }
+        },
+    BusinessController.updateBusiness
 )
 
 router.route('/:id')
@@ -63,6 +89,10 @@ router.route('/:id')
     )
     .get(
         BusinessController.businessDetailsForCustomer
+    )
+    .delete(
+        auth(USER_ROLES.SELLER),
+        BusinessController.deleteBusiness
     )
 
 

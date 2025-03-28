@@ -7,6 +7,8 @@ export type ITransaction = {
     proposal: Types.ObjectId;
     price: number;
     txid: string;
+    status: "Paid" | "Pending";
+    sessionId?: string;
 }
 
 export type TransactionModel = Model<ITransaction, Record<string, any>>;

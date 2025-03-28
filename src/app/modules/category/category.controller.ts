@@ -48,10 +48,22 @@ const deleteCategory = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const adminCategory = catchAsync(async (req: Request, res: Response) => {
+  const result = await CategoryService.adminCategoryFromDB()
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Category Category Retrieved successfully',
+    data: result,
+  })
+})
+
 
 export const CategoryController = {
   createCategory,
   getCategories,
   updateCategory,
-  deleteCategory
+  deleteCategory,
+  adminCategory
 }

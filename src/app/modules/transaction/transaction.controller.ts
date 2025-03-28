@@ -30,8 +30,19 @@ const transactions = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const createAccountToStripe = catchAsync(async(req: Request, res: Response)=>{
+    const result = await TransactionService.createAccountToStripe(req.user as JwtPayload);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Connected account created successfully",
+        data: result
+    })
+});
+
 
 export const TransactionController = {
     makePayment,
-    transactions
+    transactions,
+    createAccountToStripe
 }
