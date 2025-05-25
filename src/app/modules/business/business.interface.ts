@@ -11,7 +11,7 @@ export type IBusiness = {
   email: string;
   phone: string;
   website: string;
-  socialMedia: string;
+  socialMedia?: string;
   ownership: "Sole Proprietorship" | "Partnership" | "Limited Partnership" | "Limited Liability Partnership" | "Private Limited Company";
   revenue: number;
   price: number;
