@@ -19,7 +19,7 @@ router.route('/')
             try {
                 const user = req.user as JwtPayload;
                 const { revenue, price, employees, ...otherPayload } = req.body;
-                const logo =  getSingleFilePath(req.files, "image");
+                const logo =  getSingleFilePath(req.files, "logo");
                 const image =  getMultipleFilesPath(req.files, "image");
                 const doc =  getMultipleFilesPath(req.files, "doc");
 
