@@ -12,7 +12,7 @@ export type IBusiness = {
   phone: string;
   website: string;
   socialMedia: string;
-  ownership: string;
+  ownership: "Sole Proprietorship" | "Partnership" | "Limited Partnership" | "Limited Liability Partnership" | "Private Limited Company";
   revenue: number;
   price: number;
   employees: number;

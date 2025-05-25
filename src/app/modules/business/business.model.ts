@@ -13,7 +13,10 @@ const BusinessSchema = new Schema<IBusiness>(
     phone: { type: String, required: true },
     website: { type: String, required: true },
     socialMedia: { type: String, required: true },
-    ownership: { type: String, required: true },
+    ownership: { 
+      type: String, 
+      enum: ["Sole Proprietorship", "Partnership", "Limited Partnership", "Limited Liability Partnership", "Private Limited Company"],
+      required: true },
     revenue: { type: Number, required: true },
     price: { type: Number, required: true },
     employees: { type: Number, required: true },
