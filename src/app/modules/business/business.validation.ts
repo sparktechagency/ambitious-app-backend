@@ -10,7 +10,7 @@ export const BusinessZodValidationSchema = z.object({
         location: z.string({ required_error: "Location is Required" }),
         email: z.string({ required_error: "Email is required" }).email({ message: "Invalid Email" }),
         phone: z.string({ required_error: "Phone is Required" }),
-        website: z.string({ required_error: "Website is Required" }).url({ message: "Invalid URL" }),
+        website: z.string({ required_error: "Website is Required" }),
         ownership: z.enum(["Sole Proprietorship", "Partnership", "Limited Partnership", "Limited Liability Partnership", "Private Limited Company"], { required_error: "Ownership is Required" }),
         revenue: z.number({ required_error: "Revenue is Required" }).nonnegative({ message: "Revenue Must include Positive value" }),
         price: z.number({ required_error: "Price is Required" }).nonnegative({ message: "Price Must include Positive value" }),
