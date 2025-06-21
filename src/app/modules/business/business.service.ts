@@ -145,7 +145,7 @@ const updateBusinessInDB = async (id: string, payload: any) => {
     );
 
     //filter image
-    const updatedDoc = isExistBusiness?.doc?.filter(
+    const updatedDoc = (isExistBusiness?.doc || []).filter(
         (doc) => !payload?.docToDelete?.includes(doc)
     );
 
