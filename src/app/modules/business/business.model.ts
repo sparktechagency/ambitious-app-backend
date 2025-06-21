@@ -9,6 +9,8 @@ const BusinessSchema = new Schema<IBusiness>(
     description: { type: String, required: true },
     logo: { type: String, required: true },
     location: { type: String, required: true },
+    country: { type: String, required: true },
+    city: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
     website: { type: String, required: true },
