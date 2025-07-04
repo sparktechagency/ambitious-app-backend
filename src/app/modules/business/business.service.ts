@@ -130,6 +130,8 @@ const deleteBusinessFromDB = async (id: string) => {
 
 const updateBusinessInDB = async (id: string, payload: any) => {
 
+    // console.log(payload)
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid Business ID");
     }
@@ -182,6 +184,8 @@ const updateBusinessInDB = async (id: string, payload: any) => {
         updateData,
         { new: true }
     );
+
+    // console.log(business)
 
     if (!business) {
         throw new ApiError(StatusCodes.BAD_REQUEST, "Failed to update Business");

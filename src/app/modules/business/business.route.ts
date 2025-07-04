@@ -62,6 +62,7 @@ router.patch("/update/:id",
         async (req: Request, res: Response, next: NextFunction) => {
 
             try {
+                console.log(req.body)
                 const { revenue, price, employees, ...otherPayload } = req.body;
                 const logo =  getSingleFilePath(req.files, "image");
                 const image =  getMultipleFilesPath(req.files, "image");
